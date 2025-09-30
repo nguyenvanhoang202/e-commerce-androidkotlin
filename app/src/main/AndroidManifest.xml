@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:allowBackup="true"
+        android:usesCleartextTraffic="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/hoangcomputer"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyApplication"
+        tools:targetApi="35">
+
+
+        <activity
+            android:name=".ui.auth.login.LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyApplication.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Giữ SplashActivity nhưng không phải launcher nữa -->
+        <activity android:name=".ui.splash.SplashActivity" />
+
+        <!-- Các activity khác giữ nguyên -->
+        <activity android:name=".ui.auth.register.RegisterActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".ui.profile.ProfileFragment" />
+        <activity android:name=".ui.profile.ChangePasswordActivity" />
+
+
+    </application>
+</manifest>
