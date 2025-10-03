@@ -10,8 +10,7 @@
     <color name="orange_500">#FF5722</color>
     <color name="orange_900">#E64A19</color>
     <color name="black_900">#1F2A37</color>
-    <color name="bottom_nav_item_color">@color/orange_selector</color>
     <color name="orange_active">#FF6200</color>
     <color name="orange_inactive">#1D100C</color>
-    <color name="bottom_nav_colors">@color/orange_selector</color>
+
 </resources>

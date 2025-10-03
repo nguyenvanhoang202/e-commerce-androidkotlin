@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.auth.login
+package com.example.adminapplication.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,15 +6,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.myapplication.MainActivity
-import com.example.myapplication.R
-import com.example.myapplication.data.model.LoginRequest
-import com.example.myapplication.ui.auth.register.RegisterActivity
-import com.example.myapplication.data.model.LoginResponse
-import com.example.myapplication.data.api.RetrofitClient
+import com.example.adminapplication.MainActivity
+import com.example.adminapplication.R
+import com.example.adminapplication.data.api.RetrofitClient
+import com.example.adminapplication.data.model.LoginRequest
+import com.example.adminapplication.data.model.LoginResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,11 +24,8 @@ class LoginActivity : AppCompatActivity() {
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
-        val btnGotoRegister = findViewById<Button>(R.id.btnGotoRegister)
 
-        btnGotoRegister.setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
-        }
+
 
         btnLogin.setOnClickListener {
             val username = etUsername.text.toString().trim()
@@ -40,7 +37,8 @@ class LoginActivity : AppCompatActivity() {
             }
 
             val request = LoginRequest(username, password)
-            RetrofitClient.instance.login("user",request).enqueue(object : Callback<LoginResponse> {
+            RetrofitClient.instance.login("admin",request).enqueue(object :
+                Callback<LoginResponse> {
                 override fun onResponse(
                     call: Call<LoginResponse>,
                     response: Response<LoginResponse>
@@ -62,7 +60,18 @@ class LoginActivity : AppCompatActivity() {
                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                         finish()
                     } else {
-                        Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
+                        val errorMsg = try {
+                            val errorBody = response.errorBody()?.string()
+                            if (!errorBody.isNullOrEmpty()) {
+                                JSONObject(errorBody).getString("message")
+                            } else {
+                                "Login failed"
+                            }
+                        } catch (e: Exception) {
+                            "Login failed"
+                        }
+
+                        Toast.makeText(this@LoginActivity, errorMsg, Toast.LENGTH_SHORT).show()
                     }
                 }
 

@@ -18,7 +18,7 @@
         <activity
             android:name=".ui.auth.login.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyApplication.NoActionBar">
+            android:theme="@style/Theme.MyApplication">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -26,7 +26,6 @@
         </activity>
 
         <!-- Giữ SplashActivity nhưng không phải launcher nữa -->
-        <activity android:name=".ui.splash.SplashActivity" />
 
         <!-- Các activity khác giữ nguyên -->
         <activity android:name=".ui.auth.register.RegisterActivity" />
