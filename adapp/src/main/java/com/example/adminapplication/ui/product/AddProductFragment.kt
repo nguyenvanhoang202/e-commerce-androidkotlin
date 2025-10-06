@@ -131,8 +131,9 @@ class AddProductFragment : Fragment() {
                     val stockBody = stock.toString().toRequestBody("text/plain".toMediaTypeOrNull())
                     val isNewBody = isNew.toString().toRequestBody("text/plain".toMediaTypeOrNull())
                     val isHotBody = isHot.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-                    val categoryIdBody = (category.id ?: 0L).toString().toRequestBody("text/plain".toMediaTypeOrNull())
                     val descriptionBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
+                    val categoryIdBody = (category.id ?: 0L).toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
 
                     val filePart = MultipartBody.Part.createFormData(
                         "files",
@@ -143,7 +144,7 @@ class AddProductFragment : Fragment() {
                     val response = withContext(Dispatchers.IO) {
                         repository.createProductWithImage(
                             nameBody, slugBody, priceBody, discountBody, brandBody,
-                            stockBody, isNewBody, isHotBody, categoryIdBody,descriptionBody, filePart
+                            stockBody, isNewBody, isHotBody,descriptionBody, categoryIdBody, filePart
                         )
                     }
 

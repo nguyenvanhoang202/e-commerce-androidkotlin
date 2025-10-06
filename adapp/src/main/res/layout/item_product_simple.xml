@@ -43,6 +43,15 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/btn_manage_images"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/ic_image"
+        android:contentDescription="Quản lý ảnh"
+        app:tint="#FF6D00" />
+
+    <ImageView
         android:id="@+id/btn_edit"
         android:layout_width="24dp"
         android:layout_height="24dp"

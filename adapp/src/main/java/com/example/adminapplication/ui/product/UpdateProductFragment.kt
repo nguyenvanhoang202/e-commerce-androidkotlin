@@ -62,6 +62,10 @@ class UpdateProductFragment : Fragment() {
 
     ): View {
         val view = inflater.inflate(R.layout.fragment_update_product, container, false)
+        val btnBack: ImageButton = view.findViewById(R.id.btn_back)
+        btnBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
         val product = arguments?.getSerializable("product") as? Product
         product?.let {
             productId = it.id ?: 0L}
@@ -80,7 +84,7 @@ class UpdateProductFragment : Fragment() {
         btnSelectImage = view.findViewById(R.id.btn_select_image)
         btnUpdate = view.findViewById(R.id.btn_update_product)
 
-        val repository = ProductRepository(RetrofitClient.instance) // Khởi tạo repository
+        repository = ProductRepository(RetrofitClient.instance) // Khởi tạo repository
 
         // Setup spinner
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories.map { it.name })
@@ -127,8 +131,8 @@ class UpdateProductFragment : Fragment() {
                     response.body()?.data?.let { product ->
                         etName.setText(product.name)
                         etSlug.setText(product.slug)
-                        etPrice.setText(product.price.toString())
-                        etDiscountPrice.setText(product.discountprice.toString())
+                        etPrice.setText(product.price?.toLong()?.toString() ?: "")
+                        etDiscountPrice.setText(product.discountprice?.toLong()?.toString() ?: "")
                         etBrand.setText(product.brand)
                         etStock.setText(product.stockquantity.toString())
                         etDescription.setText(product.description)
@@ -141,8 +145,15 @@ class UpdateProductFragment : Fragment() {
                             spinnerCategory.setSelection(categoryPosition)
                         }
                         product.imageUrl?.let { url ->
+                            // Nếu đường dẫn trả về không có http (tức là chỉ có /uploads/...), thì nối thêm host vào
+                            val fullUrl = if (url.startsWith("http")) {
+                                url
+                            } else {
+                                "http://10.0.2.2:8080$url"
+                            }
+
                             Glide.with(this@UpdateProductFragment)
-                                .load(url)
+                                .load(fullUrl)
                                 .into(ivImage)
                         }
                     }
@@ -160,9 +171,9 @@ class UpdateProductFragment : Fragment() {
         val discountPrice = etDiscountPrice.text.toString().trim()
         val brand = etBrand.text.toString().trim()
         val stock = etStock.text.toString().trim()
-        val description = etDescription.text.toString().trim()
         val isNew = cbIsNew.isChecked
         val isHot = cbIsHot.isChecked
+        val description = etDescription.text.toString().trim()
         val category = categories[spinnerCategory.selectedItemPosition]
 
         if (name.isEmpty() || price.isEmpty()) {
@@ -182,7 +193,6 @@ class UpdateProductFragment : Fragment() {
                 val isHotBody = isHot.toString().toRequestBody("text/plain".toMediaTypeOrNull())
                 val descriptionBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
                 val categoryBody = (category.id ?: 0L).toString().toRequestBody("text/plain".toMediaTypeOrNull())
-
                 var filePart: MultipartBody.Part? = null
                 selectedImageUri?.let { uri ->
                     val file = File(requireContext().cacheDir, "temp_image")
@@ -190,7 +200,7 @@ class UpdateProductFragment : Fragment() {
                         file.outputStream().use { output -> input.copyTo(output) }
                     }
                     filePart = MultipartBody.Part.createFormData(
-                        "file",
+                        "files",
                         file.name,
                         file.asRequestBody("image/*".toMediaTypeOrNull())
                     )

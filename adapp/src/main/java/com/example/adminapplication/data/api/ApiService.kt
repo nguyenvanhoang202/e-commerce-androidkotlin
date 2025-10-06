@@ -40,13 +40,13 @@ interface ApiService {
         @Part("name") name: RequestBody,
         @Part("slug") slug: RequestBody,
         @Part("price") price: RequestBody,
-        @Part("discountPrice") discountPrice: RequestBody,
+        @Part("discountprice") discountPrice: RequestBody,
         @Part("brand") brand: RequestBody,
-        @Part("stockQuantity") stock: RequestBody,
+        @Part("stockquantity") stock: RequestBody,
         @Part("isNew") isNew: RequestBody,
         @Part("isHot") isHot: RequestBody,
-        @Part("category") category: RequestBody,
         @Part("description") description: RequestBody,
+        @Part("category") category: RequestBody,
         @Part file: MultipartBody.Part? // Optional, có thể null nếu không đổi ảnh
     ): Response<ApiResponse<Product>>
 
@@ -71,4 +71,7 @@ interface ApiService {
     suspend fun deleteProduct(
         @Path("id") id: Long
     ): Response<ApiResponse<Void>>
+
+    @GET("api/category")
+    suspend fun getAllCategories(): Response<ApiResponse<List<Category>>>
 }

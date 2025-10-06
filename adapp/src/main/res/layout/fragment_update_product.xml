@@ -6,23 +6,49 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:padding="16dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingVertical="8dp">
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Quay lại"
+                android:src="@drawable/ic_arrow_back"
+                android:paddingRight="15dp"
+                app:tint="#FF6D00" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Cập nhật sản phẩm"
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="40dp" />
+        </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <!-- Back button -->
-        <ImageButton
-            android:id="@+id/btn_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="Quay lại"
-            android:layout_marginBottom="16dp"
-            app:tint="#FF6D00" />
-
         <!-- Product Name -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -252,5 +278,6 @@
             android:text="Cập nhật sản phẩm"
             android:backgroundTint="#FF6D00"
             android:textColor="@android:color/white"/>
+    </LinearLayout>
     </LinearLayout>
 </ScrollView>

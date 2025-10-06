@@ -2,6 +2,7 @@ package com.example.adminapplication.data.repository
 
 import com.example.adminapplication.data.api.ApiService
 import com.example.adminapplication.data.model.ApiResponse
+import com.example.adminapplication.data.model.Category
 import com.example.adminapplication.data.model.Product
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -63,5 +64,8 @@ class ProductRepository(private val apiService: ApiService) {
 //     ---------- GET PRODUCT BY ID ----------
     suspend fun getProductById(id: Long): Response<ApiResponse<Product>> {
         return apiService.getProductById(id)
+    }
+    suspend fun getAllCategories(): Response<ApiResponse<List<Category>>> {
+        return apiService.getAllCategories()
     }
 }

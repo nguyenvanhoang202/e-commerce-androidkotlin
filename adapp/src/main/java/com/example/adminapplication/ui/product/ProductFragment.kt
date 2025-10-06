@@ -20,6 +20,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.NumberFormat
+import java.util.Locale
 
 class ProductFragment : Fragment() {
 
@@ -97,7 +99,10 @@ class ProductFragment : Fragment() {
             val btnDelete = itemView.findViewById<ImageView>(R.id.btn_delete)
 
             nameView.text = product.name ?: "Không có tên"
-            priceView.text = "${product.price ?: 0}đ"
+            val formattedPrice = NumberFormat.getNumberInstance(Locale("vi", "VN"))
+                .format(product.price ?: 0)
+            priceView.text = "$formattedPrice Vnđ"
+
 
             Glide.with(requireContext())
                 .load(baseUrl + (product.imageUrl ?: ""))
