@@ -30,7 +30,6 @@
         <!-- Các activity khác giữ nguyên -->
         <activity android:name=".ui.auth.register.RegisterActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".ui.profile.ProfileFragment" />
         <activity android:name=".ui.profile.ChangePasswordActivity" />
 
 

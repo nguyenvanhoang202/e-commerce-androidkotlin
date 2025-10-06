@@ -9,13 +9,13 @@
         android:label="@string/adminapp"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication">
+        android:theme="@style/Theme.AMyApplication">
 
         <!-- LoginActivity là activity khởi động -->
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyApplication">
+            android:theme="@style/Theme.AMyApplication">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -24,6 +24,7 @@
 
         <!-- MainAdminActivity chỉ được mở sau khi login -->
         <activity android:name=".MainActivity"/>
+        <activity android:name=".ui.profile.ChangePasswordActivity" />
 
     </application>
 </manifest>
