@@ -95,6 +95,7 @@ class ProductFragment : Fragment() {
             val imageView = itemView.findViewById<ImageView>(R.id.productImage)
             val nameView = itemView.findViewById<TextView>(R.id.product_name)
             val priceView = itemView.findViewById<TextView>(R.id.product_price)
+            val btnManageImages = itemView.findViewById<ImageView>(R.id.btn_manage_images)
             val btnEdit = itemView.findViewById<ImageView>(R.id.btn_edit)
             val btnDelete = itemView.findViewById<ImageView>(R.id.btn_delete)
 
@@ -102,7 +103,6 @@ class ProductFragment : Fragment() {
             val formattedPrice = NumberFormat.getNumberInstance(Locale("vi", "VN"))
                 .format(product.price ?: 0)
             priceView.text = "$formattedPrice Vnđ"
-
 
             Glide.with(requireContext())
                 .load(baseUrl + (product.imageUrl ?: ""))
@@ -113,7 +113,6 @@ class ProductFragment : Fragment() {
             btnEdit.setOnClickListener {
                 val bundle = Bundle().apply {
                     putLong("productId", product.id ?: 0L)
-                    // Nếu muốn truyền toàn bộ object Product, cần Product implements Parcelable hoặc Serializable
                     putSerializable("product", product)
                 }
                 parentFragmentManager.beginTransaction()
@@ -127,9 +126,21 @@ class ProductFragment : Fragment() {
                 deleteProduct(id)
             }
 
+            btnManageImages.setOnClickListener {
+                val bundle = Bundle().apply {
+                    putLong("productId", product.id ?: 0L)
+                    putSerializable("product", product)
+                }
+                parentFragmentManager.beginTransaction()
+                    .replace(this.id, ProductImagesFragment().apply { arguments = bundle })
+                    .addToBackStack(null)
+                    .commit()
+            }
+
             productContainer.addView(itemView)
         }
     }
+
 
     private fun deleteProduct(id: Long) {
         lifecycleScope.launch {

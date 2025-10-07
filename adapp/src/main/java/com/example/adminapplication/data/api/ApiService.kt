@@ -72,6 +72,39 @@ interface ApiService {
         @Path("id") id: Long
     ): Response<ApiResponse<Void>>
 
-    @GET("api/category")
+    // ---------- CATEGORY ----------
+    @GET("/api/category")
     suspend fun getAllCategories(): Response<ApiResponse<List<Category>>>
-}
+
+        // Thêm nhiều ảnh cho 1 product
+        @Multipart
+        @POST("/api/product-images/{productId}/upload")
+        suspend fun uploadProductImages(
+            @Path("productId") productId: Long,
+            @Part files: List<MultipartBody.Part>
+        ): Response<List<ProductImage>>
+
+        // Lấy tất cả ảnh theo productId
+        @GET("/api/product-images/{productId}")
+        suspend fun getProductImages(
+            @Path("productId") productId: Long
+        ): Response<List<ProductImage>>
+
+        // Xóa nhiều ảnh theo danh sách id
+        @HTTP(method = "DELETE", path = "/api/product-images/delete", hasBody = true)
+        suspend fun deleteProductImages(
+            @Body imageIds: List<Long>
+        ): Response<ApiResponse<Unit>>
+
+        // Cập nhật nhiều ảnh theo danh sách id
+        @Multipart
+        @POST("/api/product-images/update")
+        suspend fun updateProductImages(
+            @Part files: List<MultipartBody.Part>,
+            @Part("imageIds") imageIds: List<Long>
+        ): Response<ApiResponse<Any>>
+    }
+
+
+
+

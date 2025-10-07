@@ -15,5 +15,6 @@ data class Product(
     val isNew: Boolean?,
     val isHot: Boolean?,
     val createdAt: String?,
-    val category: Category?
+    val category: Category?,
+    val images: List<ProductImage>? = emptyList() // tất cả ảnh
 ): Serializable

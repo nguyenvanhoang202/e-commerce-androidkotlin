@@ -15,6 +15,7 @@ import com.example.adminapplication.R
 import com.example.adminapplication.data.api.RetrofitClient
 import com.example.adminapplication.data.model.Category
 import com.example.adminapplication.data.model.Product
+import com.example.adminapplication.data.repository.CategoryRepository
 import com.example.adminapplication.data.repository.ProductRepository
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
@@ -46,11 +47,8 @@ class UpdateProductFragment : Fragment() {
     private var selectedImageUri: Uri? = null
     private var productId: Long = 0 // Set từ argument hoặc bundle
     private lateinit var repository: ProductRepository
-    private val categories = listOf(
-        Category(1L, "Điện thoại", null, null),
-        Category(2L, "Laptop", null, null),
-        Category(3L, "Phụ kiện", null, null)
-    )
+    private lateinit var categoryRepository: CategoryRepository
+    private var categories: List<Category> = emptyList()
 
     companion object {
         private const val PICK_IMAGE_REQUEST = 1001
@@ -59,16 +57,17 @@ class UpdateProductFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-
     ): View {
         val view = inflater.inflate(R.layout.fragment_update_product, container, false)
-        val btnBack: ImageButton = view.findViewById(R.id.btn_back)
-        btnBack.setOnClickListener {
+
+        // Nút back
+        view.findViewById<ImageButton>(R.id.btn_back).setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+
         val product = arguments?.getSerializable("product") as? Product
-        product?.let {
-            productId = it.id ?: 0L}
+        product?.let { productId = it.id ?: 0L }
+
         // Bind views
         etName = view.findViewById(R.id.et_product_name)
         etSlug = view.findViewById(R.id.et_product_slug)
@@ -84,12 +83,14 @@ class UpdateProductFragment : Fragment() {
         btnSelectImage = view.findViewById(R.id.btn_select_image)
         btnUpdate = view.findViewById(R.id.btn_update_product)
 
-        repository = ProductRepository(RetrofitClient.instance) // Khởi tạo repository
+        repository = ProductRepository(RetrofitClient.instance)
+        categoryRepository = CategoryRepository(RetrofitClient.instance)
 
-        // Setup spinner
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories.map { it.name })
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerCategory.adapter = adapter
+        // Load category từ backend
+        loadCategories {
+            // Khi category load xong, load dữ liệu sản phẩm để set selection spinner
+            loadProductData()
+        }
 
         // Chọn ảnh mới
         btnSelectImage.setOnClickListener {
@@ -98,15 +99,34 @@ class UpdateProductFragment : Fragment() {
             startActivityForResult(Intent.createChooser(intent, "Chọn ảnh"), PICK_IMAGE_REQUEST)
         }
 
-        // Cập nhật sản phẩm
         btnUpdate.setOnClickListener {
             updateProduct()
         }
 
-        // Nếu bạn có productId, có thể load data trước
-        loadProductData()
-
         return view
+    }
+
+    private fun loadCategories(onLoaded: (() -> Unit)? = null) {
+        lifecycleScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) { categoryRepository.getAllCategories() }
+                if (response.isSuccessful && response.body()?.success == true) {
+                    categories = response.body()?.data ?: emptyList()
+                    val adapter = ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        categories.map { it.name ?: "N/A" }
+                    )
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    spinnerCategory.adapter = adapter
+                    onLoaded?.invoke()
+                } else {
+                    Toast.makeText(requireContext(), "Không tải được danh mục", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Lỗi load category: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -121,8 +141,7 @@ class UpdateProductFragment : Fragment() {
     }
 
     private fun loadProductData() {
-        // Nếu productId > 0, load dữ liệu từ API
-        if (productId == 0L) return
+        if (productId == 0L || categories.isEmpty()) return // chờ category load xong
 
         lifecycleScope.launch {
             try {
@@ -138,20 +157,14 @@ class UpdateProductFragment : Fragment() {
                         etDescription.setText(product.description)
                         cbIsNew.isChecked = product.isNew == true
                         cbIsHot.isChecked = product.isHot == true
+
                         val categoryPosition = categories.indexOfFirst { c ->
                             c.id != null && product.category?.id != null && c.id == product.category!!.id
                         }
-                        if (categoryPosition != -1) {
-                            spinnerCategory.setSelection(categoryPosition)
-                        }
-                        product.imageUrl?.let { url ->
-                            // Nếu đường dẫn trả về không có http (tức là chỉ có /uploads/...), thì nối thêm host vào
-                            val fullUrl = if (url.startsWith("http")) {
-                                url
-                            } else {
-                                "http://10.0.2.2:8080$url"
-                            }
+                        if (categoryPosition != -1) spinnerCategory.setSelection(categoryPosition)
 
+                        product.imageUrl?.let { url ->
+                            val fullUrl = if (url.startsWith("http")) url else "http://10.0.2.2:8080$url"
                             Glide.with(this@UpdateProductFragment)
                                 .load(fullUrl)
                                 .into(ivImage)
@@ -159,7 +172,7 @@ class UpdateProductFragment : Fragment() {
                     }
                 }
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Lỗi load data: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Lỗi load product: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -193,6 +206,7 @@ class UpdateProductFragment : Fragment() {
                 val isHotBody = isHot.toString().toRequestBody("text/plain".toMediaTypeOrNull())
                 val descriptionBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
                 val categoryBody = (category.id ?: 0L).toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
                 var filePart: MultipartBody.Part? = null
                 selectedImageUri?.let { uri ->
                     val file = File(requireContext().cacheDir, "temp_image")
@@ -226,3 +240,4 @@ class UpdateProductFragment : Fragment() {
         }
     }
 }
+

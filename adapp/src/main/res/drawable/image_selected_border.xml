@@ -1,0 +1,8 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#33FF6D00"/> <!-- nền mờ nhẹ -->
+    <stroke
+        android:width="3dp"
+        android:color="#FF6D00"/> <!-- viền cam -->
+    <corners android:radius="8dp"/>
+</shape>

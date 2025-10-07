@@ -65,7 +65,4 @@ class ProductRepository(private val apiService: ApiService) {
     suspend fun getProductById(id: Long): Response<ApiResponse<Product>> {
         return apiService.getProductById(id)
     }
-    suspend fun getAllCategories(): Response<ApiResponse<List<Category>>> {
-        return apiService.getAllCategories()
-    }
 }
