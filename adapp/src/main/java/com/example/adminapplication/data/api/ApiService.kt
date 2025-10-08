@@ -76,6 +76,32 @@ interface ApiService {
     @GET("/api/category")
     suspend fun getAllCategories(): Response<ApiResponse<List<Category>>>
 
+    // CREATE
+    @Multipart
+    @POST("/api/category")
+    suspend fun createCategories(
+        @Part("name") name: RequestBody,
+        @Part("slug") slug: RequestBody,
+        @Part("description") description: RequestBody
+    ): Response<ApiResponse<Category>>
+
+    // UPDATE
+    @Multipart
+    @PUT("/api/category/{id}")
+    suspend fun updateCategory(
+        @Path("id") id: Long,
+        @Part("name") name: RequestBody,
+        @Part("slug") slug: RequestBody,
+        @Part("description") description: RequestBody
+    ): Response<ApiResponse<Category>>
+
+    // DELETE
+    @DELETE("/api/category/{id}")
+    suspend fun deleteCategory(
+        @Path("id") id: Long
+    ): Response<ApiResponse<Void>>
+
+    // ---------- PRODUCT IMAGE ----------
         // Thêm nhiều ảnh cho 1 product
         @Multipart
         @POST("/api/product-images/{productId}/upload")
