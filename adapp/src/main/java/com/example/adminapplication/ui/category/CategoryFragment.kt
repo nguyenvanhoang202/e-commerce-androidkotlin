@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.adminapplication.R
 import com.example.adminapplication.data.api.RetrofitClient
 import com.example.adminapplication.data.repository.CategoryRepository
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 
 class CategoryFragment : Fragment() {
@@ -22,6 +23,7 @@ class CategoryFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_category, container, false)
         val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerViewCategories)
+        val fabAdd = view.findViewById<FloatingActionButton>(R.id.fabAddCategory)
 
         adapter = CategoryAdapter(mutableListOf(),
             onEditSave = { updated ->
@@ -56,6 +58,12 @@ class CategoryFragment : Fragment() {
 
         loadCategories()
 
+        fabAdd.setOnClickListener {
+            val bottomSheet = AddCategoryBottomSheet(
+                onAdded = { loadCategories() } // khi thêm xong, load lại danh sách
+            )
+            bottomSheet.show(parentFragmentManager, "AddCategoryBottomSheet")
+        }
         return view
     }
 

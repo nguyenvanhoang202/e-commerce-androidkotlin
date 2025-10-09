@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="12dp"
+        android:text="Thêm danh mục"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên danh mục"
+        android:inputType="textPersonName"
+        android:padding="8dp"
+        android:background="@drawable/edittext_bottomline"
+        android:layout_marginTop="5dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FF6D00"/>
+
+    <EditText
+        android:id="@+id/etSlug"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Slug"
+        android:inputType="text"
+        android:padding="8dp"
+        android:background="@drawable/edittext_bottomline"
+        android:layout_marginTop="10dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FF6D00"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:id="@+id/etDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edittext_bottomline"
+        android:hint="Mô tả"
+        android:inputType="textMultiLine"
+        android:minLines="3"
+        android:padding="8dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FF6D00"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lưu"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/orange_500"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

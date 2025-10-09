@@ -1,0 +1,12 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <!-- Nền avatar -->
+    <solid android:color="#DDDDDD" />   <!-- xám nhạt -->
+
+    <!-- Viền avatar -->
+    <stroke
+        android:width="2dp"
+        android:color="#FF6D00"/> <!-- cam -->
+
+</shape>

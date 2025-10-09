@@ -77,22 +77,14 @@ interface ApiService {
     suspend fun getAllCategories(): Response<ApiResponse<List<Category>>>
 
     // CREATE
-    @Multipart
     @POST("/api/category")
-    suspend fun createCategories(
-        @Part("name") name: RequestBody,
-        @Part("slug") slug: RequestBody,
-        @Part("description") description: RequestBody
-    ): Response<ApiResponse<Category>>
+    suspend fun createCategory(@Body category: CategoryRequest): Response<ApiResponse<Category>>
 
-    // UPDATE
-    @Multipart
+    //UPDATE
     @PUT("/api/category/{id}")
     suspend fun updateCategory(
-        @Path("id") id: Long,
-        @Part("name") name: RequestBody,
-        @Part("slug") slug: RequestBody,
-        @Part("description") description: RequestBody
+        @Path("id") id: Long?,
+        @Body category: Category
     ): Response<ApiResponse<Category>>
 
     // DELETE
