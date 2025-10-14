@@ -11,8 +11,8 @@
     <!-- Avatar -->
     <ImageView
         android:id="@+id/imgAvatar"
-        android:layout_width="120dp"
-        android:layout_height="match_parent"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="10dp"
         android:adjustViewBounds="true"

@@ -95,33 +95,67 @@ interface ApiService {
 
     // ---------- PRODUCT IMAGE ----------
         // Thêm nhiều ảnh cho 1 product
-        @Multipart
-        @POST("/api/product-images/{productId}/upload")
-        suspend fun uploadProductImages(
-            @Path("productId") productId: Long,
-            @Part files: List<MultipartBody.Part>
-        ): Response<List<ProductImage>>
+    @Multipart
+    @POST("/api/product-images/{productId}/upload")
+    suspend fun uploadProductImages(
+        @Path("productId") productId: Long,
+        @Part files: List<MultipartBody.Part>
+    ): Response<List<ProductImage>>
 
-        // Lấy tất cả ảnh theo productId
-        @GET("/api/product-images/{productId}")
-        suspend fun getProductImages(
-            @Path("productId") productId: Long
-        ): Response<List<ProductImage>>
+    // Lấy tất cả ảnh theo productId
+    @GET("/api/product-images/{productId}")
+    suspend fun getProductImages(
+        @Path("productId") productId: Long
+    ): Response<List<ProductImage>>
 
-        // Xóa nhiều ảnh theo danh sách id
-        @HTTP(method = "DELETE", path = "/api/product-images/delete", hasBody = true)
-        suspend fun deleteProductImages(
-            @Body imageIds: List<Long>
-        ): Response<ApiResponse<Unit>>
+    // Xóa nhiều ảnh theo danh sách id
+    @HTTP(method = "DELETE", path = "/api/product-images/delete", hasBody = true)
+    suspend fun deleteProductImages(
+        @Body imageIds: List<Long>
+    ): Response<ApiResponse<Unit>>
 
-        // Cập nhật nhiều ảnh theo danh sách id
-        @Multipart
-        @POST("/api/product-images/update")
-        suspend fun updateProductImages(
-            @Part files: List<MultipartBody.Part>,
-            @Part("imageIds") imageIds: List<Long>
-        ): Response<ApiResponse<Any>>
-    }
+    // Cập nhật nhiều ảnh theo danh sách id
+    @Multipart
+    @POST("/api/product-images/update")
+    suspend fun updateProductImages(
+        @Part files: List<MultipartBody.Part>,
+        @Part("imageIds") imageIds: List<Long>
+    ): Response<ApiResponse<Any>>
+    // ---------- USER ----------
+    // Admin lấy tất cả user
+    @GET("/api/users/admin")
+    suspend fun getAllUsersForAdmin(): Response<ApiResponse<List<UserWithAvatarDTO>>>
+
+    // Manage lấy tất cả user
+    @GET("/api/users/manage")
+    suspend fun getAllUsersForManage(): Response<ApiResponse<List<UserWithAvatarDTO>>>
+
+    // Sửa user
+    @PUT("/api/users/{id}")
+    suspend fun updateUser(
+        @Path("id") id: Long,
+        @Body user: User
+    ): ApiResponse<User>
+
+    // Xóa user
+    @DELETE("/api/users/{id}")
+    suspend fun deleteUser(@Path("id") id: Long): ApiResponse<Any>
+
+    // Cập nhật trạng thái active của user
+    @PUT("/api/users/{id}/active")
+    suspend fun updateUserActive(
+        @Path("id") id: Long, @Query("active") active: Boolean): ApiResponse<User>
+    // Lấy chi tiết (Users + Usersdetail)
+    @GET("api/users/{id}/detail")
+    suspend fun getUserDetailById(@Path("id") id: Long): ApiResponse<UserWithDetailDTO>
+    // Cập nhật chi tiết (Users + Usersdetail)
+    @PUT("/api/users/{id}/full-update")
+    suspend fun updateUserDetail(
+        @Path("id") id: Long,
+        @Body request: MutableMap<String, Any>
+    ): ApiResponse<UserWithDetailDTO>
+}
+
 
 
 
